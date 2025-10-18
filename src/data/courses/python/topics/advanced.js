@@ -6,7 +6,6 @@ export const advanced = [
 			{ id: 'abstract-classes', title: 'Abstract Classes and Interfaces (abc module)' },
 			{ id: 'multiple-inheritance', title: 'Multiple Inheritance and MRO' },
 			{ id: 'property-decorators', title: 'Property Decorators (@property, setters, deleters)' },
-			{ id: 'metaclasses', title: 'Metaclasses' },
 		],
 	},
 	{
@@ -44,7 +43,6 @@ export const advanced = [
 			{ id: 'threading-gil', title: 'Threading and the GIL' },
 			{ id: 'multiprocessing', title: 'Multiprocessing for True Parallelism' },
 			{ id: 'asyncio', title: 'Asynchronous Programming with asyncio' },
-			{ id: 'async-await', title: 'async/await Patterns' },
 		],
 	},
 	{
@@ -53,8 +51,7 @@ export const advanced = [
 		subtopics: [
 			{ id: 'requests-rest', title: 'Using requests for REST APIs' },
 			{ id: 'auth-headers', title: 'Handling Authentication and Headers' },
-			{ id: 'json-apis', title: 'Consuming JSON APIs' },
-			{ id: 'build-api', title: 'Building Simple APIs with Flask or FastAPI' },
+			{ id: 'build-api', title: 'Building Simple APIs with FastAPI' },
 		],
 	},
 	{
@@ -63,15 +60,12 @@ export const advanced = [
 		subtopics: [
 			{ id: 'unit-tests', title: 'Writing Unit Tests with unittest and pytest' },
 			{ id: 'mocking', title: 'Mocking and Patching' },
-			{ id: 'breakpoints', title: 'Using Breakpoints and Debuggers' },
-			{ id: 'test-coverage', title: 'Test Coverage Tools' },
 		],
 	},
 	{
 		id: 'packaging-deployment',
 		title: 'Packaging and Deployment',
 		subtopics: [
-			{ id: 'project-structure', title: 'Structuring Python Projects' },
 			{ id: 'setup-py', title: 'Using setup.py / pyproject.toml' },
 			{ id: 'versioning-pypi', title: 'Versioning and Publishing to PyPI' },
 			{ id: 'cli-tools', title: 'Creating Command-line Tools' },
@@ -93,17 +87,6 @@ export const advanced = [
 			{ id: 'pep8', title: 'Code Readability (PEP 8)' },
 			{ id: 'profiling', title: 'Profiling and Performance Tuning (cProfile, timeit)' },
 			{ id: 'memory-optimization', title: 'Memory Optimization Techniques' },
-			{ id: 'logging-config', title: 'Logging and Configuration Management' },
-		],
-	},
-	{
-		id: 'real-world-projects',
-		title: 'Real-world Projects',
-		subtopics: [
-			{ id: 'cli-todo', title: 'CLI Tool (e.g., Todo Manager)' },
-			{ id: 'rest-api-fastapi', title: 'REST API with FastAPI' },
-			{ id: 'web-scraper', title: 'Web Scraper with BeautifulSoup + pandas' },
-			{ id: 'data-dashboard', title: 'Data Dashboard with Streamlit' },
 		],
 	},
     {
@@ -111,10 +94,7 @@ export const advanced = [
         title: 'Projects',
         subtopics: [
             { id: 'rest-api-fastapi', title: 'Implement CRUD endpoints with SQLite and ORM models.' },
-            { id: 'web-scraper', title: 'Building a web scraper with BeautifulSoup and requests' },
             { id: 'stock-market-analyser', title: 'Building a stock market analyser with pandas and matplotlib' },
-            { id: 'automation-bot', title: 'Automate repetitive tasks' },
-            { id: 'data-dashboard', title: 'Building a data dashboard with Streamlit' }
         ]
     }
 ];

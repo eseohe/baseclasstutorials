@@ -217,38 +217,45 @@ This works like: 8 ** 2 = 64`
     },
     
     {
-      type: 'code',
-      title: 'Another Exponentiation Example',
-      language: 'python',
-      code: `# Another example showing right-to-left
-result1 = 3 ** 2 ** 3
-print("3 ** 2 ** 3 =", result1)
-
-# Let's break this down step by step
-step1 = 2 ** 3  # The rightmost exponentiation first
-print("Step 1: 2 ** 3 =", step1)
-
-step2 = 3 ** step1  # Then the left exponentiation
-print("Step 2: 3 **", step1, "=", step2)
-
-print("So 3 ** 2 ** 3 = 3 ** (2 ** 3) =", result1)
-
-# Compare with left-to-right
-result2 = (3 ** 2) ** 3
-print("(3 ** 2) ** 3 =", result2)
-print("The difference is huge!")`
-    },
-    
-    {
-      type: 'output',
-      title: 'Output',
-      content: `3 ** 2 ** 3 = 6561
-Step 1: 2 ** 3 = 8
-Step 2: 3 ** 8 = 6561
-So 3 ** 2 ** 3 = 3 ** (2 ** 3) = 6561
-(3 ** 2) ** 3 = 729
-The difference is huge!`
-    },
+  type: 'code',
+  title: 'Another Exponentiation Example',
+  language: 'python',
+  code: '# Another example showing right-to-left\nresult1 = 3 ** 2 ** 3\nprint("3 ** 2 ** 3 =", result1)'
+},
+{
+  type: 'text',
+  title: 'Step-by-Step Exponentiation',
+  content: 'Let\'s break down `3 *\u200B* 2 *\u200B* 3` step by step:'
+},
+{
+  type: 'code',
+  title: 'Step 1: Evaluate the Rightmost Exponent',
+  language: 'python',
+  code: 'step1 = 2 ** 3  # The rightmost exponentiation first\nprint("Step 1: 2 ** 3 =", step1)'
+},
+{
+  type: 'code',
+  title: 'Step 2: Use the Result as the Exponent',
+  language: 'python',
+  code: 'step2 = 3 ** step1  # Then the left exponentiation\nprint("Step 2: 3 **", step1, "=", step2)'
+},
+{
+  type: 'code',
+  title: 'Final Calculation',
+  language: 'python',
+  code: 'print("So 3 ** 2 ** 3 = 3 ** (2 ** 3) =", result1)'
+},
+{
+  type: 'code',
+  title: 'Compare with Left-to-Right Grouping',
+  language: 'python',
+  code: 'result2 = (3 ** 2) ** 3\nprint("(3 ** 2) ** 3 =", result2)\nprint("The difference is huge!")'
+},
+{
+  type: 'output',
+  title: 'Output',
+  content: '3 ** 2 ** 3 = 6561\nStep 1: 2 ** 3 = 8\nStep 2: 3 ** 8 = 6561\nSo 3 ** 2 ** 3 = 3 ** (2 ** 3) = 6561\n(3 ** 2) ** 3 = 729\nThe difference is huge!'
+},
     
     {
       type: 'text',

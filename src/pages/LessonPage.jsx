@@ -49,6 +49,7 @@ export default function LessonPage() {
         topicSubtopics = topic.subtopics;
         subtopic = topicSubtopics.find(st => st.id === lessonId);
         localIndex = topicSubtopics.findIndex(st => st.id === lessonId);
+        foundCategory = cat;
         break;
       }
       // Basic/Intermediate: topics is an array of main topics

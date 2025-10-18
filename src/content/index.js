@@ -43,6 +43,69 @@ export const contentRegistry = {
       'inheritance': false,
       'polymorphism': false,
       'encapsulation': false
+    },
+    advanced: {
+      // Advanced OOP Concepts
+      'abstract-classes': true,
+      'multiple-inheritance': true,
+      'property-decorators': true,
+      'metaclasses': true,
+      
+      // Advanced Data Handling
+      'pandas-analysis': true,
+      'numpy-arrays': true,
+      'data-visualization': false,
+      
+      // Database Connections
+      'sqlite3': false,
+      'sqlalchemy': false,
+      'postgresql-mysql': false,
+      
+      // File and Data Processing
+      'binary-files': false,
+      'excel': false,
+      'xml-html-parsing': false,
+      
+      // Concurrency and Parallelism
+      'threading-gil': false,
+      'multiprocessing': false,
+      'asyncio': true,
+      'async-await': false,
+      
+      // Networking and APIs
+      'requests-rest': true,
+      'auth-headers': false,
+      'json-apis': false,
+      'build-api': false,
+      
+      // Testing and Debugging
+      'unit-tests': false,
+      'mocking': false,
+      'breakpoints': false,
+      'test-coverage': false,
+      
+      // Packaging and Deployment
+      'project-structure': false,
+      'setup-py': false,
+      'versioning-pypi': false,
+      'cli-tools': false,
+      
+      // Design Patterns
+      'singleton-factory': false,
+      'decorator-adapter': false,
+      'observer-strategy': false,
+      
+      // Best Practices & Optimization
+      'pep8': false,
+      'profiling': false,
+      'memory-optimization': false,
+      'logging-config': false,
+      
+      // Real-world Projects
+      'cli-todo': false,
+      'rest-api-fastapi': false,
+      'web-scraper': false,
+      'data-dashboard': false
     }
   },
   sql: {

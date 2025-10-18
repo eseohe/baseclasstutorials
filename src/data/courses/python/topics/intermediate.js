@@ -93,7 +93,7 @@ export const intermediate = [
                 title: 'Projects',
                 subtopics: [
                     { id: 'expense-tracker', title: 'Building a comprehensive expense tracking application' },
-                    { id: 'web-scraper', title: 'Building a production-ready web scraping system' },
+                    { id: 'web-scraper', title: 'Building a web scraping system' },
                     { id: 'data-pipeline', title: 'Creating an ETL data processing pipeline' }
                 ]
             }
