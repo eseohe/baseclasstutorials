@@ -249,7 +249,7 @@ export default function LessonPage() {
             <div className="flex items-center justify-between gap-4">
               {prevSubtopic ? (
                 <Link
-                  to={`/course/${courseId}/${prevSubtopic.topicId}/${prevSubtopic.id}`}
+                  to={`/course/${courseId}/${topicId}/${prevSubtopic.id}`}
                   className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-blue-600 dark:hover:border-blue-400 hover:text-blue-600 dark:hover:text-blue-400 transition-all group"
                 >
                   <ChevronLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
@@ -262,9 +262,10 @@ export default function LessonPage() {
                 <div />
               )}
 
+              {/* Next button logic: if nextSubtopic exists, go to it. Otherwise, go to the first subtopic of the next topic in the group (advanced) or next topic in next topic group (basic/intermediate). */}
               {nextSubtopic ? (
                 <Link
-                  to={`/course/${courseId}/${nextSubtopic.topicId}/${nextSubtopic.id}`}
+                  to={`/course/${courseId}/${topicId}/${nextSubtopic.id}`}
                   className="flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-all group ml-auto"
                 >
                   <div className="text-right">
@@ -274,13 +275,84 @@ export default function LessonPage() {
                   <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </Link>
               ) : (
-                <Link
-                  to={`/course/${courseId}`}
-                  className="flex items-center gap-2 px-4 py-2 rounded-lg bg-green-600 text-white hover:bg-green-700 transition-all ml-auto"
-                >
-                  <span className="text-sm font-medium">Course Complete! View All Subtopics</span>
-                  <ChevronRight className="w-4 h-4" />
-                </Link>
+                (() => {
+                  let nextTopicId = null;
+                  let nextSubtopicId = null;
+                  let nextTopicTitle = null;
+                  // Advanced structure: topics are direct
+                  if (foundCategory && topic && foundCategory.topics && topicSubtopics) {
+                    // Check if topics are direct (advanced)
+                    const isAdvanced = foundCategory.topics.some(t => t.subtopics);
+                    if (isAdvanced) {
+                      const topicsArray = foundCategory.topics;
+                      let currentTopicIdx = topicsArray.findIndex(t => t.id === topicId);
+                      if (currentTopicIdx !== -1 && currentTopicIdx < topicsArray.length - 1) {
+                        const nextTopic = topicsArray[currentTopicIdx + 1];
+                        if (nextTopic.subtopics && nextTopic.subtopics.length > 0) {
+                          nextTopicId = nextTopic.id;
+                          nextSubtopicId = nextTopic.subtopics[0].id;
+                          nextTopicTitle = nextTopic.subtopics[0].title;
+                        }
+                      }
+                    } else {
+                      // Basic/Intermediate: topics are grouped
+                      for (let groupIdx = 0; groupIdx < foundCategory.topics.length; groupIdx++) {
+                        const group = foundCategory.topics[groupIdx];
+                        if (group.topics) {
+                          for (let topicIdx = 0; topicIdx < group.topics.length; topicIdx++) {
+                            const t = group.topics[topicIdx];
+                            if (t.id === topicId) {
+                              // If not last topic in group, go to next topic in same group
+                              if (topicIdx < group.topics.length - 1) {
+                                const nextTopic = group.topics[topicIdx + 1];
+                                if (nextTopic.subtopics && nextTopic.subtopics.length > 0) {
+                                  nextTopicId = nextTopic.id;
+                                  nextSubtopicId = nextTopic.subtopics[0].id;
+                                  nextTopicTitle = nextTopic.subtopics[0].title;
+                                }
+                              } else if (groupIdx < foundCategory.topics.length - 1) {
+                                // If last topic in group, go to first topic in next group
+                                const nextGroup = foundCategory.topics[groupIdx + 1];
+                                if (nextGroup.topics && nextGroup.topics.length > 0) {
+                                  const nextTopic = nextGroup.topics[0];
+                                  if (nextTopic.subtopics && nextTopic.subtopics.length > 0) {
+                                    nextTopicId = nextTopic.id;
+                                    nextSubtopicId = nextTopic.subtopics[0].id;
+                                    nextTopicTitle = nextTopic.subtopics[0].title;
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                  if (nextTopicId && nextSubtopicId) {
+                    return (
+                      <Link
+                        to={`/course/${courseId}/${nextTopicId}/${nextSubtopicId}`}
+                        className="flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-all group ml-auto"
+                      >
+                        <div className="text-right">
+                          <div className="text-xs opacity-90">Next Topic</div>
+                          <div className="text-sm font-medium">{nextTopicTitle || 'Next Topic'}</div>
+                        </div>
+                        <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                      </Link>
+                    );
+                  } else {
+                    return (
+                      <Link
+                        to={`/course/${courseId}`}
+                        className="flex items-center gap-2 px-4 py-2 rounded-lg bg-green-600 text-white hover:bg-green-700 transition-all ml-auto"
+                      >
+                        <span className="text-sm font-medium">Course Complete! View All Subtopics</span>
+                        <ChevronRight className="w-4 h-4" />
+                      </Link>
+                    );
+                  }
+                })()
               )}
             </div>
           </div>

@@ -2,8 +2,12 @@ import { Link } from 'react-router-dom';
 import { courses } from '../data/courses';
 import { ArrowRight, BookOpen, Code, Database, BarChart3 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import React, { useState, useMemo } from 'react';
+import { X } from 'lucide-react';
 
 export default function HomePage() {
+  const [search, setSearch] = useState('');
+
   const container = {
     hidden: { opacity: 0 },
     show: {
@@ -19,8 +23,70 @@ export default function HomePage() {
     show: { opacity: 1, y: 0 }
   };
 
+  // Helper to flatten all topics/subtopics for search
+  function courseMatches(course, query) {
+    const q = query.toLowerCase();
+    if (
+      course.title.toLowerCase().includes(q) ||
+      course.description.toLowerCase().includes(q)
+    ) {
+      return true;
+    }
+    // Search in categories/topics/subtopics
+    for (const cat of course.categories || []) {
+      for (const topicGroup of cat.topics || []) {
+        // topicGroup may be a topic or a group of topics
+        if (topicGroup.title && topicGroup.title.toLowerCase().includes(q)) return true;
+        if (topicGroup.subtopics) {
+          for (const sub of topicGroup.subtopics) {
+            if (sub.title && sub.title.toLowerCase().includes(q)) return true;
+          }
+        }
+        if (topicGroup.topics) {
+          for (const t of topicGroup.topics) {
+            if (t.title && t.title.toLowerCase().includes(q)) return true;
+            if (t.subtopics) {
+              for (const sub of t.subtopics) {
+                if (sub.title && sub.title.toLowerCase().includes(q)) return true;
+              }
+            }
+          }
+        }
+      }
+    }
+    return false;
+  }
+
+  const filteredCourses = useMemo(() => {
+    if (!search.trim()) return courses;
+    return courses.filter(course => courseMatches(course, search));
+  }, [search]);
+
   return (
     <div className="space-y-12">
+      {/* Search Bar */}
+      <div className="flex justify-center mb-8">
+        <div className="relative w-full max-w-xl">
+          <input
+            type="text"
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            placeholder="Search for a course or topic..."
+            className="w-full px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg pr-12"
+          />
+          {search && (
+            <button
+              type="button"
+              onClick={() => setSearch('')}
+              className="absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded-full bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-600 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              aria-label="Clear search"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          )}
+        </div>
+      </div>
+
       {/* Hero Section */}
       <motion.div 
         initial={{ opacity: 0, y: -20 }}
@@ -81,71 +147,71 @@ export default function HomePage() {
           <BookOpen className="w-8 h-8 text-blue-600 dark:text-blue-400" />
           <h2 className="text-3xl font-bold">Available Courses</h2>
         </div>
-        
         <motion.div 
           variants={container}
           initial="hidden"
           animate="show"
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
         >
-          {courses.map((course) => (
-            
-            <motion.div key={course.id} variants={item}>
-              <Link to={`/course/${course.id}`}>
-                <div className="group relative bg-white dark:bg-slate-800 rounded-2xl shadow-lg border border-slate-200 dark:border-slate-700 overflow-hidden hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
-                  {/* Gradient Background */}
-                  <div className={`absolute inset-0 bg-gradient-to-br ${course.color} opacity-0 group-hover:opacity-10 transition-opacity duration-300`} />
-                  
-                  {/* Content */}
-                  <div className="relative p-6 space-y-4">
-                    {/* Icon */}
-                    <div className={`w-16 h-16 rounded-xl bg-gradient-to-br ${course.color} flex items-center justify-center text-3xl shadow-lg group-hover:scale-110 transition-transform duration-300`}>
-                      {course.icon}
-                    </div>
-                    
-                    {/* Title */}
-                    <h3 className="text-2xl font-bold group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:bg-clip-text group-hover:from-blue-600 group-hover:to-purple-600 transition-all duration-300">
-                      {course.title}
-                    </h3>
-                    
-                    {/* Description */}
-                    <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
-                      {course.description}
-                    </p>
-                    
-                    {/* Topics Count */}
-                    <div className="flex items-center justify-between pt-4 border-t border-slate-200 dark:border-slate-700">
-                      <span className="text-sm text-slate-500 dark:text-slate-400">
-                        {course.categories ? course.categories.reduce((acc, cat) => acc + cat.topics.length, 0) : 0} topics
-                        {' | '}
-                        {course.categories
-                          ? course.categories.reduce(
-                              (catAcc, cat) =>
-                                catAcc +
-                                cat.topics.reduce(
-                                  (topicAcc, topicGroup) =>
-                                    topicAcc +
-                                    (topicGroup.topics
-                                      ? topicGroup.topics.reduce(
-                                          (mainAcc, mainTopic) =>
-                                            mainAcc + (mainTopic.subtopics ? mainTopic.subtopics.length : 0),
-                                          0
-                                        )
-                                      : topicGroup.subtopics
-                                      ? topicGroup.subtopics.length
-                                      : 0),
-                                  0
-                                ),
-                              0
-                            ) : 0} lessons
-                      </span>
-                      <ArrowRight className="w-5 h-5 text-slate-400 group-hover:text-blue-600 group-hover:translate-x-1 transition-all duration-300" />
+          {filteredCourses.length === 0 ? (
+            <div className="col-span-full text-center text-slate-500 dark:text-slate-400 text-lg py-12">
+              No courses or topics found for "{search}"
+            </div>
+          ) : (
+            filteredCourses.map((course) => (
+              <motion.div key={course.id} variants={item}>
+                <Link to={`/course/${course.id}`}>
+                  <div className="group relative bg-white dark:bg-slate-800 rounded-2xl shadow-lg border border-slate-200 dark:border-slate-700 overflow-hidden hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
+                    {/* Gradient Background */}
+                    <div className={`absolute inset-0 bg-gradient-to-br ${course.color} opacity-0 group-hover:opacity-10 transition-opacity duration-300`} />
+                    {/* Content */}
+                    <div className="relative p-6 space-y-4">
+                      {/* Icon */}
+                      <div className={`w-16 h-16 rounded-xl bg-gradient-to-br ${course.color} flex items-center justify-center text-3xl shadow-lg group-hover:scale-110 transition-transform duration-300`}>
+                        {course.icon}
+                      </div>
+                      {/* Title */}
+                      <h3 className="text-2xl font-bold group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:bg-clip-text group-hover:from-blue-600 group-hover:to-purple-600 transition-all duration-300">
+                        {course.title}
+                      </h3>
+                      {/* Description */}
+                      <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
+                        {course.description}
+                      </p>
+                      {/* Topics Count */}
+                      <div className="flex items-center justify-between pt-4 border-t border-slate-200 dark:border-slate-700">
+                        <span className="text-sm text-slate-500 dark:text-slate-400">
+                          {course.categories ? course.categories.reduce((acc, cat) => acc + cat.topics.length, 0) : 0} topics
+                          {' | '}
+                          {course.categories
+                            ? course.categories.reduce(
+                                (catAcc, cat) =>
+                                  catAcc +
+                                  cat.topics.reduce(
+                                    (topicAcc, topicGroup) =>
+                                      topicAcc +
+                                      (topicGroup.topics
+                                        ? topicGroup.topics.reduce(
+                                            (mainAcc, mainTopic) =>
+                                              mainAcc + (mainTopic.subtopics ? mainTopic.subtopics.length : 0),
+                                            0
+                                          )
+                                        : topicGroup.subtopics
+                                        ? topicGroup.subtopics.length
+                                        : 0),
+                                    0
+                                  ),
+                                0
+                              ) : 0} lessons
+                        </span>
+                        <ArrowRight className="w-5 h-5 text-slate-400 group-hover:text-blue-600 group-hover:translate-x-1 transition-all duration-300" />
+                      </div>
                     </div>
                   </div>
-                </div>
-              </Link>
-            </motion.div>
-          ))}
+                </Link>
+              </motion.div>
+            ))
+          )}
         </motion.div>
       </div>
 
