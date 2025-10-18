@@ -13,13 +13,14 @@
  * @returns {Promise<Object>} - The lesson content object
  */
 export async function loadLessonContent(courseId, category, topicId, lessonId) {
-  try {
+  // Use Vite's import.meta.glob to statically include all lesson files
+  const lessonModules = import.meta.glob('/src/content/**/*.js');
+  // Build the file path
+  const filePath = `/src/content/${courseId}/${category}/${topicId}/${lessonId}.js`;
+  const importFn = lessonModules[filePath];
+  if (importFn) {
     try {
-      const path = `/src/content/${courseId}/${category}/${topicId}/${lessonId}.js`;   
-      console.log('Importing content from:', path);   
-      // Use courseId, category, topicId, and lessonId in the path
-      const contentModule = await import(/* @vite-ignore */ path);
-      console.log('Imported module:', contentModule);
+      const contentModule = await importFn();
       // Convert lessonId to camelCase for export lookup
       const camelCaseId = lessonId.replace(/-([a-z])/g, (g) => g[1].toUpperCase());
       const exportName = `${camelCaseId}Content`;
@@ -32,11 +33,9 @@ export async function loadLessonContent(courseId, category, topicId, lessonId) {
     } catch (err) {
       // Fallback below
     }
-  return createFallbackContent(courseId, category, topicId, lessonId);
-  } catch (error) {
-    console.warn(`Could not load content for ${courseId}/${topicId}/${lessonId}:`, error);
-  return createFallbackContent(courseId, category, topicId, lessonId);
   }
+  // Fallback if not found or error
+  return createFallbackContent(courseId, category, topicId, lessonId);
 }
 
 /**
